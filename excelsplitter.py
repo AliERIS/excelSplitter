@@ -20,14 +20,27 @@ def ayir_ve_yaz(input_file, sutun, output_path):
         
         # Excel dosyasına yazma işlemini başlat
         with pd.ExcelWriter(output_file, engine="xlsxwriter") as writer:
-            # Yazıcı objesini alın ve ilk hücreye büro değerini yazın
-            workbook = writer.book
-            worksheet = workbook.add_worksheet()
-            worksheet.write('A1', f"{value}")
-            
             # Filtrelenmiş veriyi ikinci satırdan itibaren yaz
-            df_filtered.to_excel(writer, sheet_name="Sheet1", startrow=1, index=False)
+            df_filtered.to_excel(writer, sheet_name="Sheet1", startrow=2, index=False)
             
+            # Çalışma kitabı ve çalışma sayfası nesnelerini alın
+            workbook = writer.book
+            worksheet = writer.sheets["Sheet1"]
+            
+            # İlk satırda hücreleri birleştirme ve değer yazma
+            num_columns = len(df_filtered.columns)
+            merge_range = f"A1:{chr(65 + num_columns - 1)}1"  # A1'den son sütuna kadar birleştirme
+            
+            # Birleştirilmiş hücre için format oluştur
+            merge_format = workbook.add_format({
+                'align': 'center', 
+                'valign': 'vcenter', 
+                'bold': True
+            })
+            
+            # Hücreleri birleştir ve değer yaz
+            worksheet.merge_range(merge_range, f"{sutun}: {value}", merge_format)
+        
         print(f"Dosya kaydedildi: {output_file}")
 
 # Örnek kullanım
