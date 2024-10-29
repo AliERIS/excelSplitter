@@ -1,6 +1,3 @@
-#2024.10.13
-#generat
-
 import pandas as pd
 
 def ayir_ve_yaz(input_file, sutun, output_path):
@@ -13,7 +10,10 @@ def ayir_ve_yaz(input_file, sutun, output_path):
     # Her benzersiz değer için bir filtre uygulayıp, yeni Excel dosyası oluştur
     for value in unique_values:
         # Sütun değerine göre filtrele
-        df_filtered = df[df[sutun] == value]
+        df_filtered = df[df[sutun] == value].copy()
+        
+        # Filtrelenmiş dosyadan seçilen sütunu kaldır
+        df_filtered.drop(columns=[sutun], inplace=True)
         
         # Yeni dosya ismi oluştur
         output_file = f"{output_path}/{sutun}_{value}.xlsx"
