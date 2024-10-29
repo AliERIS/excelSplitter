@@ -23,10 +23,10 @@ def ayir_ve_yaz(input_file, sutun, output_path):
             # Yazıcı objesini alın ve ilk hücreye büro değerini yazın
             workbook = writer.book
             worksheet = workbook.add_worksheet()
-            worksheet.write('A1', f"{sutun}: {value}")
+            worksheet.write('A1', f"{value}")
             
             # Filtrelenmiş veriyi ikinci satırdan itibaren yaz
-            df_filtered.to_excel(writer, sheet_name="Sheet1", startrow=2, index=False)
+            df_filtered.to_excel(writer, sheet_name="Sheet1", startrow=1, index=False)
             
         print(f"Dosya kaydedildi: {output_file}")
 
