@@ -15,17 +15,19 @@ def ayir_ve_yaz(input_file, sutun, output_path):
         # Filtrelenmiş dosyadan seçilen sütunu kaldır
         df_filtered.drop(columns=[sutun], inplace=True)
         
-        # En tepeye eklemek için büro değerini tek satırlık DataFrame olarak oluştur
-        header_df = pd.DataFrame({sutun: [value]})
-        
-        # header_df ve df_filtered'ı birleştir
-        final_df = pd.concat([header_df, df_filtered], ignore_index=True)
-        
         # Yeni dosya ismi oluştur
         output_file = f"{output_path}/{sutun}_{value}.xlsx"
         
-        # Filtrelenen veriyi yeni Excel dosyasına yaz
-        final_df.to_excel(output_file, index=False)
+        # Excel dosyasına yazma işlemini başlat
+        with pd.ExcelWriter(output_file, engine="xlsxwriter") as writer:
+            # Yazıcı objesini alın ve ilk hücreye büro değerini yazın
+            workbook = writer.book
+            worksheet = workbook.add_worksheet()
+            worksheet.write('A1', f"{sutun}: {value}")
+            
+            # Filtrelenmiş veriyi ikinci satırdan itibaren yaz
+            df_filtered.to_excel(writer, sheet_name="Sheet1", startrow=2, index=False)
+            
         print(f"Dosya kaydedildi: {output_file}")
 
 # Örnek kullanım
